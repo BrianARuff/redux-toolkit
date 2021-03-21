@@ -34,6 +34,7 @@ function TodoList() {
 
   const handleDeleteTodo = (e, index) => {
     e.preventDefault();
+    console.log("index", index);
     dispatch(deleteTodo(index));
   };
 
@@ -42,13 +43,13 @@ function TodoList() {
       {todos.map((todo, index) => {
         return (
           <div key={Math.random() * 1000}>
-            <li
-              onMouseOver={handleMouseOver}
-              onClick={(e) => handleStrikeThroughTodo(e, index)}
-            >
+            {console.log(index)}
+            <li onMouseOver={handleMouseOver} onClick={handleStrikeThroughTodo}>
               {todo}
             </li>
-            <button onClick={handleDeleteTodo}>Delete Todo</button>
+            <button onClick={(e) => handleDeleteTodo(e, index)}>
+              Delete Todo
+            </button>
           </div>
         );
       })}
