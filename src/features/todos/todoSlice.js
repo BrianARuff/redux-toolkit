@@ -11,13 +11,17 @@ export const todoSlice = createSlice({
         },
         deleteTodo: (state, action) => {
             const todoIndex = state.value.findIndex((todo, index) => index === action.payload);
-            console.log(action);
             state.value.splice(todoIndex, 1);
+        },
+        editTodo: (state, action) => {
+            console.log(state, action);
+            const todoIndex = state.value.findIndex((todo, index) => index === action.payload.index);
+            state.value[todoIndex] = action.payload.editItem;
         }
     }
 });
 
-export const { addTodo, deleteTodo } = todoSlice.actions;
+export const { addTodo, deleteTodo, editTodo } = todoSlice.actions;
 
 export const selectTodos = state => state.todos.value;
 

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectTodos, addTodo, deleteTodo } from "./todoSlice";
+import { selectTodos, addTodo, deleteTodo, editTodo } from "./todoSlice";
 
 function TodoList() {
   const todos = useSelector(selectTodos);
   const dispatch = useDispatch();
 
-  const [formData, setFormData] = useState({ item: "" });
+  const [formData, setFormData] = useState({ item: "", editItem: "" });
+  const [showEditTodo, setShowEditTodo] = useState(false);
 
   const handleInput = (e) => {
     setFormData(() => {
@@ -16,6 +17,7 @@ function TodoList() {
       };
     });
   };
+
   const handleAddTodo = (e) => {
     e.preventDefault();
     dispatch(addTodo(formData.item));
@@ -38,23 +40,45 @@ function TodoList() {
     dispatch(deleteTodo(index));
   };
 
+  const handleShowEditTodo = (e) => {
+    e.preventDefault();
+    setShowEditTodo(!showEditTodo);
+  };
+
+  const handleEditTodo = (e, index) => {
+    e.preventDefault();
+    dispatch(editTodo({ editItem: formData.editItem, index: index }));
+  };
+
   return (
     <form>
       {todos.map((todo, index) => {
         return (
-          <div key={Math.random() * 1000}>
-            {console.log(index)}
+          <div key={todo + index}>
             <li onMouseOver={handleMouseOver} onClick={handleStrikeThroughTodo}>
               {todo}
             </li>
+            <button onClick={handleShowEditTodo}>Edit</button>
             <button onClick={(e) => handleDeleteTodo(e, index)}>
               Delete Todo
             </button>
+            <div style={{ display: showEditTodo ? "block" : "none" }}>
+              <input name="editItem" onChange={handleInput} type="text" />
+              <button
+                style={{
+                  width: "103%",
+                  margin: "1rem 0 0 0",
+                }}
+                onClick={(e) => handleEditTodo(e, index)}
+              >
+                Edit Todo
+              </button>
+            </div>
           </div>
         );
       })}
       <div>
-        <input name="item" onChange={handleInput} type="text" id="addTodo" />
+        <input name="item" onChange={handleInput} type="text" />
         <button onClick={handleAddTodo}>Add Todo</button>
       </div>
     </form>
